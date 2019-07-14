@@ -50,7 +50,7 @@ def exist(url: object) -> bool:
     request.add_header('User-agent',
                        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:63.0) Gecko/20100101 Firefox/63.0')
     try:
-        resp: object = urllib.urlopen(request)
+        resp: object = urllib.urlopen(request, timeout=5)
         code: int = resp.getcode()
         if code >= 400:
             return 'NO'
@@ -77,13 +77,16 @@ def load(filename: str) -> list:
     :param filename:
     :return: list
     """
-    with open(filename, 'r', newline='', encoding='utf-8') as csvfile:
-        fieldnames: list = ['name', 'href', 'add_date', 'exists']
-        reader: object = csv.DictReader(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
-        already: list = []
-        for row in reader:
-            already.append(row['href'])
-        return already
+    try:
+        with open(filename, 'r', newline='', encoding='utf-8') as csvfile:
+            fieldnames: list = ['name', 'href', 'add_date', 'exists']
+            reader: object = csv.DictReader(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
+            already: list = []
+            for row in reader:
+                already.append(row['href'])
+            return already
+    except:
+        return []
 
 
 
